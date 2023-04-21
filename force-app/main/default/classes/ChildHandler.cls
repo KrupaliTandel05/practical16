@@ -69,6 +69,9 @@ public with sharing class ChildHandler {
            return Result;
        }
    
+   
+
+
    //for updation
    public static Map<Id,Account> UpdateChild(map<Id,Account> mapData , List<Account> Result,List<Account> tnew,List<Account> told){
        Map<Id,Account> finalResult= new Map<Id,Account>();
@@ -118,6 +121,8 @@ public with sharing class ChildHandler {
            }
           
        }
+        
+    
        // convert into map for avoid duplicate values
        for(Account i :Result){
            finalResult.put(i.Id,i);
@@ -126,4 +131,11 @@ public with sharing class ChildHandler {
        return finalResult; 
    }
 
+
 }
+
+
+
+
+
+

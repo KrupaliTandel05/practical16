@@ -84,7 +84,7 @@ public with sharing class ParentHandler {
             //obtaining the records 
             Id childId = told[i].Id ; 
 
-            //fetching the results of the old parent id and  the recent id
+            //fetching tsilehe results of the old parent id and  the recent id
             Id newParent = tnew[i].ParentId ; 
             Id oldParent = told[i].ParentId ; 
 
@@ -99,7 +99,7 @@ public with sharing class ParentHandler {
             List<Id> childList = child.split(',');
 
             //list to store the parent
-            List<Id > parentList = parent.split(',');
+            List<Id> parentList = parent.split(',');
             //accessing the parent of the new id
             Account resultId = mapData.get(newParent);
             String parenttobeAdded = resultId.Parent_Accounts__c ; 
@@ -108,7 +108,7 @@ public with sharing class ParentHandler {
              //adding the parent details in the current account
             //making the parent of the child null and then updating the results
             // record.Parent_Accounts__c = null;
-            record.Parent_Accounts__c = parenttobeAdded; 
+            
 
             //remove parent from all the child  and add the parent records 
 
@@ -124,9 +124,9 @@ public with sharing class ParentHandler {
                 records.Parent_Accounts__c += parenttobeAdded ;
                 Result.add(records);
             }
-   
-           
-            
+            // record.Parent_Accounts__c  = '';
+            // record.Parent_Accounts__c = parenttobeAdded; 
+            tnew[i].Parent_Accounts__c = parenttobeAdded ; 
 
             //from here the actual execution of the program starts
          
@@ -147,6 +147,8 @@ public with sharing class ParentHandler {
             String childTobeUpdateString = chilTobeUpdate.child__c ; 
             childTobeUpdateString += child ;
 
+            
+
          
 
             
@@ -157,5 +159,54 @@ public with sharing class ParentHandler {
         }
         return finalResult ; 
     }
-    
+
+
+     //    updation strategy 
+public static List<Account> updateParent(List<Account> tnew ){
+        for(Account acc: tnew){
+  //getting the id from the trigger new 
+  Id recordId = acc.Id ; 
+
+  //updation parent record
+  Id parentId = acc.ParentId ; 
+
+  //accessing the child records of the current id 
+  String childrecords = acc.child__c ; 
+  //converting them in the list
+  List<Id> childList = childrecords.split(',');
+
+  String parentRecords = acc.Parent_Accounts__c ; 
+  //converting them in the list 
+  List<Id> parentList = parentRecords.split(',');
+
+  List<Account> parentAcc = [SELECT Id , child__c , Parent_Accounts__c FROM Account WHERE Id =: parentId ];
+  System.debug(parentAcc);
+  
+  String parentAccount = parentAcc[0].Parent_Accounts__c + (String)parentId + ',' ; 
+
+  List<Account> recordList = [SELECT Id , child__c  , Parent__Accounts__c FROM Account WHERE Id IN :childList ];
+
+  //iterating all the list and removing the parent records and  the updating the records
+  for(Account i : recordList){
+      String recordl = i.Parent_Accounts__c ;
+      //removing the parent of the from the recordList 
+      for(Id k : parentList){
+          recordl = recordl.remove((String)k + ',');
+      }
+      //update the field 
+
+  
+      i.Parent_Accounts__c = recordl ; 
+      i.Parent_Accounts__c  += parentAccount;
+      System.debug(i.Parent_Accounts__c);
+
+  }
+
+
+  acc.Parent_Accounts__c = parentAccount;
+}
+return recordList ;
+
+}
+      
 }

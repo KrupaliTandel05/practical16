@@ -37,10 +37,10 @@ trigger MainTrigger on Account (after insert,before delete ,after update , befor
     else if(Trigger.isUpdate){
         totalResultMap = ChildHandler.UpdateChild(mapData , Result , tnew, told);
         totalResult = totalResultMap.values();
-        //updating the parent
-        totalResultMap = ParentHandler.updateParent(mapData, Result, tnew, told);
-        totalResult = totalResultMap.values() ; 
-    
+        List<Account> result = ParentHandler.updateParent(tnew) ; 
+        update result ; 
+         
+       
         
     }
    		

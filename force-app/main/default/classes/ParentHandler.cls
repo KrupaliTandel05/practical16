@@ -181,7 +181,7 @@ public static List<Account> updateParent(List<Account> tnew ){
 
   List<Account> parentAcc = [SELECT Id , child__c , Parent_Accounts__c FROM Account WHERE Id =: parentId ];
   System.debug(parentAcc);
-  
+
   String parentAccount = parentAcc[0].Parent_Accounts__c + (String)parentId + ',' ; 
 
   List<Account> recordList = [SELECT Id , child__c  , Parent__Accounts__c FROM Account WHERE Id IN :childList ];
@@ -201,8 +201,6 @@ public static List<Account> updateParent(List<Account> tnew ){
       System.debug(i.Parent_Accounts__c);
 
   }
-
-
   acc.Parent_Accounts__c = parentAccount;
 }
 return recordList ;
